@@ -1,0 +1,14 @@
+digramstore.cc
+digramstore.h
+filelist.c
+filelist.h
+filereader.cc
+filereader.h
+filestore.cc
+filestore.h
+modified_main.cc
+parse_settings.cc
+parse_settings.h
+sequitur_simple_mod.cc
+sequitur_simple_mod.h
+test.cc

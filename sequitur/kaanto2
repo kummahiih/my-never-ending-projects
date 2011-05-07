@@ -1,0 +1,1 @@
+ g++ parse_settings.cc filelist.c filestore.cc filereader.cc digramstore.cc sequitur_simple_mod.cc test.cc -o testcompile

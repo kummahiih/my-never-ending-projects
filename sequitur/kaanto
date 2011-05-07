@@ -1,0 +1,2 @@
+g++ -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all cmd_line.cc filereader.cc digramstore.cc sequitur_simple_mod.cc modified_main.cc -o sequiturModTKCN0007 -g
+
