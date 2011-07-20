@@ -1,2 +1,2 @@
-"identifier";"http-address";"polling-interval";"validation-regexp"
-"Google search";"http://www.google.fi/";10;"Google"
+"identifier";"http-address";"polling-interval";"timeout";"validation-regexp"
+"Google search";"http://www.google.fi/";10;15;"Google"

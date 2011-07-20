@@ -12,31 +12,44 @@ import os
 
 import time
 
+import re
+
+import subprocess
 
 def getCsvValues(aFile):
     with open(aFile, 'r' ) as f:
         reader = csv.DictReader(f, delimiter=';', quotechar='"')
         for values in reader:
             yield values
-    
-def validate_dictionary(aDict, configuration_keys):
-    for key in configuration_keys:
-        if key not in aDict:
-            raise KeyError('%s not found from %s'%(key,aDict))
 
+def matchbasic(aDict, name):
+    matcher = '[a-zA-Z0-9 -_]*'
+    if not re.match(matcher, aDict[name]):
+        raise ValueError('%s does not match "%s" at %s'%(key,matcher,aDict))
 
 class Config:
     configuration_keys = ['identifier']
+    
+
+    def validate(self, aDict): 
+        for key in self.configuration_keys:
+            if key not in aDict:
+                raise KeyError('%s not found from %s'%(key,aDict))
+            
+        matchbasic('identifier')
+
+        
+        return aDict
 
     def read_properties(self, aFile):
-        read_properties = list(getCsvValues(aFile))
+        properties = list(getCsvValues(aFile))
         
-        read_properties = [i for i in read_properties if i != None ]
+        properties = [self.validate(i) for i in properties if i != None ]
         
-        def validate(aDict): validate_dictionary(self.configuration_keys, aDict)
-        map(validate, read_properties)
         self.properties = read_properties
         self.propertyfile = aFile
+    
+    
     
     def setkey(self):
         keyed = {}
@@ -67,8 +80,11 @@ class ApplicationConfig(Config):
         'address-configuration-file'
         ]
     
-
-                  
+    def validate(self,aDict):
+        aDict = Config.validate(self, aDict)
+        matchbasic('workpath')
+        
+        return aDict
 
 
 class AddressConfig(Config):
@@ -76,25 +92,83 @@ class AddressConfig(Config):
         'identifier',
         'http-address',
         'polling-interval',
+        'timeout',
         'validation-regexp'
         ]
+    
+    def validate(self, aDict): 
+        aDict['polling-interval'] = int(aDict['polling-interval'])
+        aDict['timeout'] = int(aDict['timeout'])
+        return aDict
+            
+
     
     def read_properties(self, aFile):
         Config.read_properties(self, aFile)
         
         def setInterval(aDict):
-            aDict['polling-interval'] = int(aDict['polling-interval'])
             return aDict
             
         self.properties = map(setInterval, self.properties)
 
 def makearchivepath(applicationConfigDict, addressConfigDict):
-    #TODO: some sort of escape / validation here
     now = time.strftime("%Y-%m-%d-%H-%S")
-    directory = applicationConfigDict['workpath'] + '/' + addressConfigDict['identifier'] + '/' + now
-    
+    #TODO: better validification for pathname
+    directory = applicationConfigDict['workpath'] + '/' + addressConfigDict['identifier'] + '/' + now    
     os.makedirs(directory)
+    return directory
+
+def getChildren(pid):
+    p = popen('ps --no-headers -o pid --ppid %d' % pid)
+    stdout, stderr = p.communicate()
+    return [int(p) for p in stdout.split()]
+
+def alarmHandler(signum, frame):
+    raise Alarm
+
+def execute(applicationConfigDict, addressConfigDict, workpath, cmd, logfile):
+    
+    logger = multiprocessing.get_logger()
+
+    
+    archivepath = makearchivepath(applicationConfigDict, addressConfigDict)
+    
+    workpath = archivepath + '/' + workpath
+    os.makedirs(workpath)
+    
+    logger.info('cmd: '+'asdfasdf')
+    
+    cmd = cmd+" > %s 2>&1"%logfile
+    p = subprocess.Popen(cmd, shell = True, cwd = workpath, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+
+    signal.signal(signal.SIGALRM, alarmHandler)
+    signal.alarm(addressConfigDict['timeout'])
+    stdoutdata, stderrdata = [None, None]
+    
+    try:
+        stdoutdata, stderrdata = p.communicate()
+        signal.alarm(0)  # reset the alarm
+        os.remove(logfile)
+    except Alarm:
+        print "Taking too long."
+        print "output so far:"
+        print open(logfile,'r').read()
+        print "Killing cmd's whole process tree:"
+        pids = [p.pid] + getChildren(p.pid)
+        for pid in pids:
+            os.kill(pid, signal.SIGKILL)
+        print 'failed to execute ',cmd
+        print 'restart the hw!'
+        os.rename(logfile, cwd + '/cmd_execution.log')
+        print 'look the file:' +cwd + '/cmd_execution.log'
+        #os.remove(logfile)
+        #sys.exit(1)
+        raise ExecutionTimeout('timeout: %s s, command: %s'%(timeoutInSec, cmd))
+    return stdoutdata, stderrdata, p.returncode
+
+    
     pass
+    
 
 """
 TODO:
