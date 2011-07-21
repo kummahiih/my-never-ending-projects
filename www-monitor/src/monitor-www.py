@@ -126,21 +126,25 @@ def getChildren(pid):
 def alarmHandler(signum, frame):
     raise Alarm
 
-def execute(applicationConfigDict, addressConfigDict, workpath, cmd, logfile):
+def execute(applicationConfigDict, addressConfigDict, workpath, cmd):
     
     logger = multiprocessing.get_logger()
-
     
     archivepath = makearchivepath(applicationConfigDict, addressConfigDict)
     
-    workpath = archivepath + '/' + workpath
-    os.makedirs(workpath)
+    logfilepath = archivepath + '/' + workpath + '.log'
     
-    logger.info('cmd: '+'asdfasdf')
+    fullworkpath = archivepath + '/' + workpath
     
-    cmd = cmd+" > %s 2>&1"%logfile
-    p = subprocess.Popen(cmd, shell = True, cwd = workpath, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+    os.makedirs(fullworkpath)
+    
+    cmd = cmd+" > %s 2>&1"%logfilepath
+    
+    logger.info('cmd: '+ cmd)
+    logger.info('workpath: '+ workpath)
 
+    p = subprocess.Popen(cmd, shell = True, cwd = workpath, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+    
     signal.signal(signal.SIGALRM, alarmHandler)
     signal.alarm(addressConfigDict['timeout'])
     stdoutdata, stderrdata = [None, None]
