@@ -27,12 +27,17 @@ Requirements, reasons, install instructions, caveats:
        - Currently writes  contents to console... just better to wait the next version, because it's clearly coming:
           - See http://groups.google.com/group/phantomjs/browse_thread/thread/678137703dc82483?pli=1  
           - PhantomJS 1.3 is still in the development. It is scheduled to be released on September 23, 2011.
+          
+ - REQUIREMENT: Linux. 
+    - REASON: currently the subprocess execution and subprocess tree termination (finding the pids) is a hack 
 
  - REQUIREMENT: Python 3.1
     - REASON: multiprocessing -module
-    - REASON: logging- module
       - http://docs.python.org/library/multiprocessing.html
       - " effectively side-stepping the Global Interpreter Lock by using subprocesses instead of threads. "
+    - REASON: logging- module
+       - CAVEEAT: no support for multiprocessing
+    
     - INSTALL: to install at Ubuntu, write: "$sudo apt-get install python3.1", other operating systems, see http://www.python.org/download/releases/3.1/
    
 
