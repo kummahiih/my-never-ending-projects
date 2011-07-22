@@ -36,7 +36,7 @@ Requirements, reasons, install instructions, caveats:
       - http://docs.python.org/library/multiprocessing.html
       - " effectively side-stepping the Global Interpreter Lock by using subprocesses instead of threads. "
     - REASON: logging- module
-       - CAVEEAT: no support for multiprocessing
+       - CAVEAT: no support for multiprocessing
     
     - INSTALL: to install at Ubuntu, write: "$sudo apt-get install python3.1", other operating systems, see http://www.python.org/download/releases/3.1/
    
@@ -49,14 +49,16 @@ App|Scheduling process |  logging process | a work event for a work process at p
 
 Process init:
  |-------------------------->.
- |->|----------------------->|----> logfile, UI view
+ |->|----------------------->|----> UI view
  |  |--------------------------------------->.
  |  |                        |<--------------|
- |  |                        |----> logfile, UI view
+ |  |                        |----> UI view
+ 
+ (Process rampdown goes in the same way)
 
 Configuration update:
  |->|------conf update------>|-------------->|
- |  |                        |----> logfile, UI view
+ |  |                        |----> UI view
  
 Then on a scheduling loop:
  |  |-----schedule-------------------------->|
@@ -64,7 +66,7 @@ Then on a scheduling loop:
  |  |                        |               |<-----------------------------------------------------.                            
  |  |                        |<--------------|
  |  |                        |               |
- |  |                        |----> logfile, UI view
+ |  |                        |----> UI view
 
 (and perhaps .. let's see)
  |  |<---------------------------------------|
@@ -97,10 +99,10 @@ Scheduling process:
  - generates the timed events for a worker pool
  
 logging process:
- - writes lines to a log file
+ - writes lines to a log file   
+   - difficulties with logging module --> NOT DONE. debug logs are printed to stdout
  - updates monitor UI
- - could call R for statistics
- - could use javascript visualizations
+    - written in csv -format. the default file is www-data/result.csv
 
 Work processes:
  - wrap the timeouts, error handling,  debugging magic and such
@@ -113,4 +115,39 @@ R:
  - statistical analysis
 
 
+
+USAGE:
+
+(put that phantomjs to your path first)
+
+help:
+
+www-monitor$ src/monitor-www.py -h
+Usage: monitor-www.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -p FILE, --application-configuration-file=FILE
+                        Application specific configuration. Default is
+                        defaultconfigs/application-config.csv
+  -n APPCONFNAME, --application-configuration-name=APPCONFNAME
+                        'unique name'.  Default is debug
+
+
+to execute, run:
+www-monitor$ src/monitor-www.py
+
+by writing 'q' and then enter, you can terminate the monitoring.
+
+you can examine the results from:
+
+$ cat www-data/result.csv 
+"returncode";"execution_start";"execution_end";"timeout_occured";"screencapture";"logfile";"sitefile";"page loaded";"loading time";"validation regexp found"
+"0";"2011-07-22-04-39";"2011-07-22-04-42";"False";"www-data/Google search/2011-07-22-04-39.png";"www-data/Google search/2011-07-22-04-39.log";"www-data/Google search/2011-07-22-04-39.html";"True";"2260";"True"
+"0";"2011-07-22-04-43";"2011-07-22-04-46";"False";"www-data/Google mail/2011-07-22-04-43.png";"www-data/Google mail/2011-07-22-04-43.log";"www-data/Google mail/2011-07-22-04-43.html";"True";"1747";"True"
+"0";"2011-07-22-04-39";"2011-07-22-04-47";"False";"www-data/Google mail/2011-07-22-04-39.png";"www-data/Google mail/2011-07-22-04-39.log";"www-data/Google mail/2011-07-22-04-39.html";"True";"6671";"True"
+"0";"2011-07-22-04-48";"2011-07-22-04-51";"False";"www-data/Google mail/2011-07-22-04-48.png";"www-data/Google mail/2011-07-22-04-48.log";"www-data/Google mail/2011-07-22-04-48.html";"True";"1938";"True"
+
+
+If you want to change the configurations, see defaultconfigs/debug-polling-config.csv  and defaultconfigs/application-config.csv
 
