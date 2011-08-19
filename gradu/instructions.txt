@@ -1,0 +1,74 @@
+﻿These instructions worked on Ubuntu 10.04 LTS
+Lines that begin with '$' mark are commands you should execute on shell.
+
+
+Go to https://www.ee.oulu.fi/research/ouspg/PROTOS_Test-Suite_c06-snmpv1
+Download c06-snmpv1-req-app-r1.jar:
+  * https://www.ee.oulu.fi/research/ouspg/PROTOS_Test-Suite_c06-snmpv1?action=AttachFile&do=get&target=c06-snmpv1-req-app-r1.jar
+
+Extract the downloaded c06-snmpv1-req-enc-r1.jar to some folder, 
+to which we will refer with $WORKFOLDER (absolute path) from now on.
+
+Get a copy of ridac-toolkit to $WORKFOLDER:
+
+$ cd $WORKFOLDER
+$ svn checkout http://ouspg-ridac.googlecode.com/svn/trunk/ ouspg-ridac-read-only
+
+== To examine how the data was parsed: ==
+
+Install Wireshark and netcat.
+
+Launch Wireshark:
+$ sudo wireshark &
+
+Disconnect your computer from every network (disable the WLAN, unplug Ethernet cable, unplug USB -cables) just to be sure you do not do anything bad.
+
+Start to record 'lo'
+
+Run in Python at $WORKFOLDER:
+$ cd $WORKFOLDER
+$ python
+...
+>>> import os
+>>> d = 'c06-snmpv1-req-app-r1/testcases/'
+>>> for i in [d+i for i in os.listdir(d) if i[:4] == '0001']:
+...  os.system("""cat %s | netcat -u localhost 161"""%i)
+...
+
+(   ^ see the spaces there before 'os.system(' )
+
+
+Stop recording at Wireshark.
+
+Export the recorded packets as PDML to 
+  $WORKFOLDER/testsuitepackets_and_responses.xml 
+
+Open the saved XML -file with for example Firefox.
+
+== To create the material for syntax inference: ==
+
+$ cd $WORKFOLDER
+$ find c06-snmpv1-req-app-r1/testcases/0001* -exec ouspg-ridac-read-only/tools/codings.py  -c base64 -O 1 -f {} \; >> c06-snmpv1-req-app-r1-testcasesbegin0001
+$ find c06-snmpv1-req-app-r1/testcases/0001* -exec cat {} \; >> c06-snmpv1-req-app-r1-testcasesbegin0001.raw
+$ python ouspg-ridac-read-only/tools/generateData.py
+
+
+== To examine the created material: ==
+
+c06-snmpv1 testpackets:
+
+$ ouspg-ridac-read-only/tools/autocorrelation.py -s c06-snmpv1-req-app-r1-testcasesbegin0001.raw -t raw-data
+$ ouspg-ridac-read-only/tools/fieldborders.py -i ws -S 3 -l -N 200 -f c06-snmpv1-req-app-r1-testcasesbegin0001 -M 20 -G -n
+
+The generated example protocol:
+
+$ ouspg-ridac-read-only/tools/autocorrelation.py -s generated.raw -t raw-data
+$ ouspg-ridac-read-only/tools/fieldborders.py -R '(.{195})' -f generated.raw -c None -i ifi -b -G -M 64
+
+
+For more help, execute:
+
+$  ouspg-ridac-read-only/tools/fieldborders.py -h
+$  ouspg-ridac-read-only/tools/autocorrelation.py -h
+
+
