@@ -58,7 +58,7 @@ $ python ouspg-ridac-read-only/tools/generateData.py
 c06-snmpv1 testpackets:
 
 $ ouspg-ridac-read-only/tools/autocorrelation.py -s c06-snmpv1-req-app-r1-testcasesbegin0001.raw -t raw-data
-$ ouspg-ridac-read-only/tools/fieldborders.py -i ws -S 3 -l -N 200 -f c06-snmpv1-req-app-r1-testcasesbegin0001 -M 20 -G -n
+$ ouspg-ridac-read-only/tools/fieldborders.py -i ifi -N 200 -f c06-snmpv1-req-app-r1-testcasesbegin0001 -M 64 -G -b -c base64 -D
 
 The generated example protocol:
 
