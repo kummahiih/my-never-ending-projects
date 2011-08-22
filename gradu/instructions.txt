@@ -37,7 +37,6 @@ $ python
 
 (   ^ see the spaces there before 'os.system(' )
 
-
 Stop recording at Wireshark.
 
 Export the recorded packets as PDML to 
@@ -47,6 +46,7 @@ Open the saved XML -file with for example Firefox.
 
 == To create the material for syntax inference: ==
 
+
 $ cd $WORKFOLDER
 $ find c06-snmpv1-req-app-r1/testcases/0001* -exec ouspg-ridac-read-only/tools/codings.py  -c base64 -O 1 -f {} \; >> c06-snmpv1-req-app-r1-testcasesbegin0001
 $ find c06-snmpv1-req-app-r1/testcases/0001* -exec cat {} \; >> c06-snmpv1-req-app-r1-testcasesbegin0001.raw
@@ -54,6 +54,11 @@ $ python ouspg-ridac-read-only/tools/generateData.py
 
 
 == To examine the created material: ==
+
+Install Python 2.6 if it is not installed
+
+Install gnuplot, matplotlib for Python 2.6
+
 
 c06-snmpv1 testpackets:
 
@@ -72,3 +77,10 @@ $  ouspg-ridac-read-only/tools/fieldborders.py -h
 $  ouspg-ridac-read-only/tools/autocorrelation.py -h
 
 
+To plot the autocorrelation confidence interval:
+
+Install scipy (I used version 0.7.0) for Python 2.6
+
+Run http://code.google.com/p/my-never-ending-projects/source/browse/trunk/gradu/plot-autocorrelation-upper-confidence-interval.py :
+
+$ ./plot-autocorrelation-upper-confidence-interval.py
