@@ -2,8 +2,8 @@
 // Name        : signnalsreinvented.cpp
 // Author      : Pauli Rikula
 // Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Copyright   : MIT License
+// Description : See ../doc/readme.txt
 //============================================================================
 
 #include <iostream>
