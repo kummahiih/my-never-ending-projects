@@ -46,7 +46,7 @@ public:
 		cout << "old functionality" << endl;
 		DummySignalSource::exampleSignalEmitingFnc();
 
-		cout << "This clue emits the signal" << endl;
+		cout << "This glue emits the signal" << endl;
 		sendEvent();
 		cout << "Signal emit done" << endl;
 
