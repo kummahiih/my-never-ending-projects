@@ -40,3 +40,16 @@ $ cd src
 $ g++ EventReceiver.cpp Classcomp.cpp EventHub.cpp signnalsreinvented.cpp -o signnalsreinvented
 $ ./signnalsreinvented
 
+
+== how does the output look like? ==
+
+$ ./signnalsreinvented
+addEventReceiver event 1
+addEventReceiver event 2
+now emit:
+old functionality
+This should send a signal
+This clue emits the signal
+muutos1
+muutos2
+Signal emit done
