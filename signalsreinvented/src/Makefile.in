@@ -1,0 +1,19 @@
+#a standard 
+
+all:	signnalsreinvented
+
+signnalsreinvented: signnalsreinvented.cpp EventHub.o Classcomp.o EventReceiver.o
+	g++ EventHub.o Classcomp.o EventReceiver.o signnalsreinvented.cpp -o signnalsreinvented
+
+EventHub.o: EventHub.cpp Classcomp.o EventReceiver.o
+	g++ -c Classcomp.o EventReceiver.o EventHub.cpp
+
+Classcomp.o: Classcomp.cpp EventReceiver.o
+	g++ -c EventReceiver.o Classcomp.cpp
+
+EventReceiver.o:
+	g++ -c EventReceiver.cpp
+
+
+clean:
+	rm -f signnalsreinvented *.o

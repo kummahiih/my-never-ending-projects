@@ -43,6 +43,7 @@ Export the recorded packets as PDML to
   $WORKFOLDER/testsuitepackets_and_responses.xml 
 
 Open the saved XML -file with for example Firefox.
+Search PDML specifications from the web.
 
 == To create the material for syntax inference: ==
 
