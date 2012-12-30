@@ -1,7 +1,5 @@
 #for parsing
-import csv
-import datetime
-import time
+from parse_data import get_data
 
 #plotting
 import matplotlib.pyplot as plt
@@ -9,20 +7,6 @@ import matplotlib.pyplot as plt
 from matplotlib import dates
 
 
-
-def get_data(filename ='dataa.txt'):
-    returned =  []
-    
-    with open(filename, 'rb') as csvfile:
-        reader = csv.reader(csvfile, delimiter=';')
-        for row in reader:
-            date = row[0].strip()
-            clock = row[1].strip()
-            got_time = datetime.datetime.strptime(date +";" + clock,"%d.%m.%Y;%H:%M:%S")
-            
-            temperature = float(row[2])
-            returned.append([got_time, temperature])
-    return returned
 
 
 def makeplot():
@@ -33,6 +17,7 @@ def makeplot():
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
+    hfmt = dates.DateFormatter('%Y.%m.%d')
     ax.plot_date(timestamps,temperature, '.-')
     ax.xaxis.set_major_locator(dates.DayLocator())
     ax.xaxis.set_major_formatter(hfmt)
