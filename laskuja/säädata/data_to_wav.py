@@ -23,13 +23,12 @@ def scale( aFloatList ,amin, amax):
     return returned
 
 
-def generate_wavs():
-    data = get_data()
+def generate_wavs(data,prefix):
     temperature = [ r[1] for r in data]
     scaled_temperature = scale(temperature,-32767,32767)
 
     for framerate in range(1000,128000,5000):
-        noise_output = wave.open('results/temperature_%d.wav'%framerate, 'w')
+        noise_output = wave.open('results/%s_%d.wav'%(prefix,framerate), 'w')
         noise_output.setparams((2, 2, framerate, 0, 'NONE', 'not compressed'))
 
         for i in scaled_temperature:
@@ -40,5 +39,5 @@ def generate_wavs():
 
         noise_output.close()
 
-
-generate_wavs()
+if __name__ == "__main__":
+    generate_wavs(get_data(),"temperature")
