@@ -5,7 +5,6 @@ import pylab as pl
 from sklearn.decomposition import FastICA
 
 from parse_data import get_data
-#from data_to_wav import generate_wavs
 
 ###############################################################################
 # Generate sample data
