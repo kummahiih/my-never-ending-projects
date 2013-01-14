@@ -1,7 +1,12 @@
 from parse_willab_data import get_data
+from willab_to_wav import interpolateSignal
 
 from plot_data import makeplot, monthly, no_locator_set
-
+import datetime
 
 if __name__ == "__main__":
-    makeplot(get_data(), monthly, step = 2)
+    delta = datetime.timedelta(0,600,0)
+    signal = get_data()
+    makeplot(signal, monthly, step = 2)
+    new_signal = list( interpolateSignal(signal, delta) )
+    makeplot(new_signal, monthly, step = 2)

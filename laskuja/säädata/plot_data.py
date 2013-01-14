@@ -22,6 +22,9 @@ def no_locator_set(ax):
 def makeplot(data, formattersetter, step = 2):
     timestamps = [ r[0] for r in data]
     temperature = [ r[1] for r in data]
+    makeplot_from_lists(timestamps, temperature, formattersetter, step)
+
+def makeplot_from_lists(timestamps, temperature, formattersetter, step):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -38,10 +41,11 @@ def makeplot(data, formattersetter, step = 2):
     plt.subplots_adjust(bottom=.3)
     plt.grid(True)
     plt.show()
-
     
 if __name__ == "__main__":
-    makeplot(get_data(), daily)
-    makeplot(get_data(), monthly)
-
+    signal = get_data()
+    makeplot(signal, daily)
+    makeplot(signal, monthly)
+    
+    
             
