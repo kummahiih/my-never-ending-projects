@@ -44,6 +44,11 @@ def get_data():
     return list(
         get_fields(included_fields = "measuretime,tempnow".split(','))
         )
+
+def get_data_airpressure():
+    return list(
+        get_fields(included_fields = "measuretime,airpressure".split(','))
+        )
     
 
 if __name__ == "__main__":
