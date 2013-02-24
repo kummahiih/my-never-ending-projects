@@ -1,3 +1,9 @@
+"""
+@copyright: 2013 by Pauli Rikula <pauli.rikula@gmail.com>
+@license: MIT <http://www.opensource.org/licenses/mit-license.php>
+"""
+
+
 print __doc__
 
 import numpy as np

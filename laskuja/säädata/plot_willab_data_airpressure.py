@@ -1,3 +1,8 @@
+"""
+@copyright: 2013 by Pauli Rikula <pauli.rikula@gmail.com>
+@license: MIT <http://www.opensource.org/licenses/mit-license.php>
+"""
+
 from parse_willab_data import get_data_airpressure
 from willab_to_wav import interpolateSignal
 from willab_airpressure_to_wav import takeOnlyValuesBetveen

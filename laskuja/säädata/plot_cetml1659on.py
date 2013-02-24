@@ -1,3 +1,9 @@
+"""
+@copyright: 2013 by Pauli Rikula <pauli.rikula@gmail.com>
+@license: MIT <http://www.opensource.org/licenses/mit-license.php>
+"""
+
+
 from parse_cetml1659on import get_data
 
 from plot_data import makeplot, monthly, no_locator_set

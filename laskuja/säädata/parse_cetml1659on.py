@@ -12,6 +12,12 @@
 
 # I think this is private research and study ..
 
+"""
+@copyright: 2013 by Pauli Rikula <pauli.rikula@gmail.com>
+@license: MIT <http://www.opensource.org/licenses/mit-license.php>
+"""
+
+
 import csv
 import re
 import datetime
