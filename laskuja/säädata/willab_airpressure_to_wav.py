@@ -3,7 +3,7 @@
 @license: MIT <http://www.opensource.org/licenses/mit-license.php>
 """
 
-from data_to_wav import generate_wavs
+from signal_tools import generate_wavs
 from parse_willab_data import get_data_airpressure
 from signal_tools import interpolateSignal
 import datetime

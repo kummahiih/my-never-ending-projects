@@ -4,7 +4,7 @@
 """
 
 
-from data_to_wav import generate_wavs
+from signal_tools import generate_wavs
 from parse_cetml1659on import get_data
 
 if __name__ == "__main__":

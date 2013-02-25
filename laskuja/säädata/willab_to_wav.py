@@ -3,7 +3,7 @@
 @license: MIT <http://www.opensource.org/licenses/mit-license.php>
 """
 
-from data_to_wav import generate_wavs
+from signal_tools import generate_wavs
 from parse_willab_data import get_data
 
 from signal_tools import interpolateSignal
@@ -22,6 +22,10 @@ if __name__ == "__main__":
 
     generate_wavs(signal,"willab_tempnow")
     
+    print "interpolating signal"
+
     new_signal = list( interpolateSignal(signal, delta) )
     
+    print "generating wavs"
+
     generate_wavs(new_signal,"willab_tempnow_interpolated")
