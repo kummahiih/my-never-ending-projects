@@ -33,8 +33,9 @@ def parse_file(csvfile):
 def get_fields(included_fields, filename , skipcount):
     
     included_fields = set(included_fields)
-    #empty strings
+    
     with open(filename, 'rb') as csvfile:
+        #empty strings
         for _ in range(skipcount):
             print csvfile.readline()
                 
