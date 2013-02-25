@@ -4,7 +4,7 @@
 """
 
 from parse_willab_data import get_data
-from willab_to_wav import interpolateSignal
+from signal_tools import interpolateSignal
 
 from plot_data import makeplot, monthly, no_locator_set
 import datetime

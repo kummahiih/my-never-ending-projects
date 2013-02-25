@@ -1,6 +1,11 @@
+"""
+@copyright: 2013 by Pauli Rikula <pauli.rikula@gmail.com>
+@license: MIT <http://www.opensource.org/licenses/mit-license.php>
+"""
+
 from data_to_wav import generate_wavs
 from parse_willab_data import get_data_airpressure
-from willab_to_wav import interpolateSignal
+from signal_tools import interpolateSignal
 import datetime
 
 def takeOnlyValuesBetveen(signal, fromValue, toValue):
