@@ -7,7 +7,7 @@ from parse_willab_data import get_data_airpressure
 from signal_tools import interpolateSignal
 from willab_airpressure_to_wav import takeOnlyValuesBetveen
 
-from plot_data import makeplot, monthly, no_locator_set
+from plot_tools import makeplot, monthly, no_locator_set
 import datetime
 
 if __name__ == "__main__":
