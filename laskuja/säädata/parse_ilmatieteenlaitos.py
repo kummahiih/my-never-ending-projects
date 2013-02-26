@@ -1,6 +1,7 @@
  # -*- coding: latin-1 -*-
 """
 Data is from ilmatieteen laitos ( http://ilmatieteenlaitos.fi/ )
+COPYRIGHT: ILMATIETEEN LAITOS
 """
 
 
@@ -27,7 +28,18 @@ def parse_file(csvfile):
         hour= int(row['Tunti'])
         minute = int(row['Minuutti'])
         stamp = datetime.datetime(year,month,day,hour,minute)
-        returned =  {'timestamp':stamp,'T':float(row['T (°C)'].replace(',','.')), 'P':float(row['P_sea (hPa)'].replace(',','.'))}
+        returned  = {'timestamp':stamp}
+        
+        try:
+            returned['T'] = float(row['T (°C)'].replace(',','.'))
+        except ValueError:
+            pass
+        
+        try:
+            returned['P'] = float(row['P_sea (hPa)'].replace(',','.'))
+        except ValueError:
+            pass
+        
         yield returned
 
 def get_fields(included_fields, filename , skipcount):
