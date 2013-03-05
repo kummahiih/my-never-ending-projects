@@ -18,6 +18,11 @@ def monthly(ax):
     ax.xaxis.set_major_locator(dates.MonthLocator())
     ax.xaxis.set_major_formatter(hfmt)
     
+def yearly(ax):
+    hfmt = dates.DateFormatter('%Y') 
+    ax.xaxis.set_major_locator(dates.YearLocator())
+    ax.xaxis.set_major_formatter(hfmt)
+    
 def no_locator_set(ax):
     return
 
