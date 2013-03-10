@@ -61,29 +61,6 @@ namespace SimpleSequitur.Model
                         todo = newtodo;
                     }
 
-                    foreach (var toexpand in todo.RulesToSkip)
-                    {
-                        Debug.Assert(Data.FirstOccurances.ContainsKey(toexpand));
-                        if (Data.FirstOccurances.ContainsKey(toexpand))
-                        {
-                            var oldEntry = Data.FirstOccurances[toexpand];
-                            Digram newDigram = new Digram(oldEntry.StartPoint);
-                            Debug.Assert(Data.FirstOccurances.ContainsKey(newDigram));
-                            var newEntry = Data.FirstOccurances[newDigram];
-                            Data.FirstOccurances[toexpand] = newEntry;
-                            //now the old rule can not be applied again by using that entry
-                            //we could remove it here .. and thats what we do
-                            if (newEntry.Rule != null)
-                                oldEntry.swapRule(newEntry.Rule);
-                        }
-                        else
-                        {
-                            //it has not been added to the dictionary at all?!
-                        }
-                    }
-                    todo.RulesToSkip.Clear();
-
-                    //useless?
                     Data.removeDigrams(todo.RemovedDigrams);
                     todo.RemovedDigrams.Clear();
                     
@@ -117,7 +94,7 @@ namespace SimpleSequitur.Model
             }
             else
             {
-                Debug.Print("using old rule:" + rule.ID);
+                Debug.Print("using old rule:" + rule.ID );
             }
 
             todo.UnionWith(Data.setRule(linkedListNode, rule));

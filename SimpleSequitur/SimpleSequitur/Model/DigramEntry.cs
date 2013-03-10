@@ -55,6 +55,7 @@ namespace SimpleSequitur.Model
             RuleInstance old = StartPoint.Value as RuleInstance;
             StartPoint.Value  = new RuleInstance(newRule);
             old.Content.deuse();
+            Debug.Print("swapped " + old.ToString() + " to " + newRule.ToString());
         }
 
         public Rule Rule

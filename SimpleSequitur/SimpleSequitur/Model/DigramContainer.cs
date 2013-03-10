@@ -126,26 +126,20 @@ namespace SimpleSequitur.Model
 
             foundEntry.Rule = rule;
             RuleAnchors[rule.Symbols] = foundEntry;
-
-            refreshOccurances(foundEntry, todo, olddigram);
-
-            return todo;
-        }
-
-        private void refreshOccurances(DigramEntry foundEntry, RecursionPoint todo, Digram olddigram)
-        {
-            //if found entry in rule that should be in the FirstOccurances dictinary
-            //we cant make rule loops though .. so the expand  should continue
-            if (foundEntry.StartPoint.List.First.Next == foundEntry.StartPoint.List.Last ||
-                foundEntry.StartPoint.List.First == foundEntry.StartPoint.List.Last)
+            
+            if (foundEntry.StartPoint.List.First.Next == foundEntry.StartPoint.List.Last &&
+                this.RuleAnchors.ContainsKey(foundEntry.StartPoint.List))
             {
-                todo.RulesToSkip.Add(olddigram);
+                Debug.Print("refreshin a substitute rule:" + foundEntry.ToString() + " -> " + this.RuleAnchors[foundEntry.StartPoint.List].ToString()); 
+                this.FirstOccurances[new Digram(foundEntry.StartPoint)] = this.RuleAnchors[foundEntry.StartPoint.List];
             }
             else
             {
                 todo.DigramsToCheck.Add(foundEntry.StartPoint.Previous);
                 todo.DigramsToCheck.Add(foundEntry.StartPoint);
             }
+
+            return todo;
         }
 
         internal RecursionPoint setRule(LinkedListNode<Symbol> linkedListNode, Rule rule)
@@ -171,6 +165,8 @@ namespace SimpleSequitur.Model
 
             var symbolpntr = rule.Symbols.First;
 
+            bool substituted = false;
+
             while(symbolpntr != null)
             {
                 var symbol= symbolpntr.Value;
@@ -185,12 +181,14 @@ namespace SimpleSequitur.Model
                         Debug.Print("substituting a rule:" + pointedRule.ID);
                         Debug.Print("into a rule:" + rule.ID);
 
+                        substituted = true;
+
                         todo.DigramsToCheck.Add(symbolpntr.Previous);
 
-                        //
-                        //var digram = new Digram(pointedRule.Symbols.First);
-                        //if (FirstOccurances.ContainsKey(digram))
-                        //    FirstOccurances.Remove(digram);
+                        
+                        var digram = new Digram(pointedRule.Symbols.First);
+                        if (FirstOccurances.ContainsKey(digram))
+                            FirstOccurances.Remove(digram);
 
 
                         var movedsymbol = pointedRule.Symbols.First;
@@ -202,15 +200,35 @@ namespace SimpleSequitur.Model
                             movedsymbol = next;
                         }
                         symbolpntr = symbolpntr.Previous;
-                        todo.DigramsToCheck.Add(symbolpntr);
                         rule.Symbols.Remove(symbolpntr.Next);
+                        todo.DigramsToCheck.Add(symbolpntr);
+                        
                     }                   
                 }
                 symbolpntr = symbolpntr.Next;
             }
 
-            refreshOccurances(adigramEntry, todo, olddigram);
-
+            if (substituted)
+            {
+                Debug.Print("Removing old substitute rule "+ olddigram.ToString());
+                this._FirstOccurances.Remove(olddigram);
+                todo.DigramsToCheck.Add(adigramEntry.StartPoint.Previous);
+                todo.DigramsToCheck.Add(adigramEntry.StartPoint);
+            }
+            else
+            {
+                if (adigramEntry.StartPoint.List.First.Next == adigramEntry.StartPoint.List.Last &&
+                    this.RuleAnchors.ContainsKey(adigramEntry.StartPoint.List))
+                {
+                    Debug.Print("refreshin a substitute rule:" +adigramEntry.ToString() + " -> " +this.RuleAnchors[adigramEntry.StartPoint.List].ToString()); 
+                    this.FirstOccurances[new Digram(adigramEntry.StartPoint)] = this.RuleAnchors[adigramEntry.StartPoint.List];
+                }
+                else
+                {
+                    todo.DigramsToCheck.Add(adigramEntry.StartPoint.Previous);
+                    todo.DigramsToCheck.Add(adigramEntry.StartPoint);
+                }
+            }
 
             return todo;
         }
