@@ -10,23 +10,21 @@
         <View:SymbolView  DataContext="{Binding Symbols, Mode=OneWay}" Width="300" Margin="0,0,0,10"/>
         </DockPanel>
         <DockPanel DockPanel.Dock="Left" Height="Auto" VerticalAlignment="Stretch">
-            <Button Content="Random test" DockPanel.Dock="Bottom"  HorizontalAlignment="Center"  Width="166"  Command="{Binding TestCommand}" />
-            <!-- just steal focus ^^ -->
-            <Button Content="Generate Grammar From input" DockPanel.Dock="Bottom"  HorizontalAlignment="Center" Width="175"/>            
 
             <Label DockPanel.Dock="Top" >Input text:</Label>
-            <TextBox DockPanel.Dock="Top" TextWrapping="Wrap" Text="{Binding Input, Mode=TwoWay}" Margin="0,0,0,0" Width="Auto" >
-                <TextBox.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform AngleX="0.754"/>
-                        <RotateTransform/>
-                        <TranslateTransform X="-1.863"/>
-                    </TransformGroup>
-                </TextBox.RenderTransform>
+            <TextBox DockPanel.Dock="Top" MaxHeight="150" TextWrapping="Wrap" Text="{Binding Input, Mode=TwoWay}" Margin="0,0,0,0" Width="Auto" IsManipulationEnabled="True" AcceptsReturn="True">
             </TextBox>
+            <DockPanel DockPanel.Dock="Top">
+                <!-- just steal focus ^^ -->
+                <Button Content="Random test" DockPanel.Dock="Right"     Command="{Binding TestCommand}" />
+                <Button Content="Generate" DockPanel.Dock="Right" />
+                <CheckBox IsChecked="{Binding SplitFromSpaces, Mode=TwoWay}">split from whitepsaces</CheckBox>
+            </DockPanel>
             <Label DockPanel.Dock="Top" >Substitution rules at the end:</Label>
-            <ListView ItemsSource="{Binding DigramEntries}" ></ListView>
+            <ListView DockPanel.Dock="Top" ItemsSource="{Binding DigramEntries}" ></ListView>
+            
+            
+            
         </DockPanel>
 
     </DockPanel>

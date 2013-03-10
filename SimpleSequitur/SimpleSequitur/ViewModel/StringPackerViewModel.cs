@@ -20,6 +20,7 @@ namespace SimpleSequitur.ViewModel
         public StringPackerViewModel()
         {
             _Input = "";
+            _SplitFromSpaces = false;
             CreateTestCommand();
         }
         String _Input;
@@ -40,6 +41,22 @@ namespace SimpleSequitur.ViewModel
             }
         }
 
+        bool _SplitFromSpaces;
+
+        public bool SplitFromSpaces
+        {
+            get { return _SplitFromSpaces; }
+            set 
+            {
+                if (value != _SplitFromSpaces)
+                {
+                    _SplitFromSpaces = value;
+                    OnPropertyChanged("SplitFromSpaces");
+                    OnPropertyChanged("Symbols");
+                }
+            }
+        }
+
         Sequitur _Sequitur;
 
         public List<SymbolViewModel> Symbols
@@ -52,10 +69,16 @@ namespace SimpleSequitur.ViewModel
                     Sequitur test = new Sequitur();
 
                     List<String> strings = new List<string>();
-
-                    foreach (Char v in Input)
+                    if (!SplitFromSpaces)
                     {
-                        strings.Add(v.ToString());
+                        foreach (Char v in Input)
+                        {
+                            strings.Add(v.ToString());
+                        }
+                    }
+                    else
+                    {
+                        strings = Input.Split(new char[4]{' ','\r','\n','\t'}).ToList();
                     }
                     test.Evaluate(strings);
 

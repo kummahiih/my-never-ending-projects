@@ -30,6 +30,14 @@ namespace SimpleSequitur.Model
 
         public bool Equals(Digram other)
         {
+            if (other == null)
+                return false;
+            if ((other.second != null) != (second != null))
+                return false;
+
+            if (second == null)
+                return other.first.Equals(first);
+
             return other.first.Equals(first) && other.second.Equals(second);
         }
 
