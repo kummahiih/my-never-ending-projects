@@ -32,6 +32,7 @@ namespace SimpleSequitur
             get { return true; }
         }
 
+
         public string Representation
         {
             get { return _Content; }
@@ -89,4 +90,5 @@ namespace SimpleSequitur
             return _Content.GetHashCode();
         }
     }
+
 }

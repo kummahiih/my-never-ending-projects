@@ -21,8 +21,11 @@ namespace SimpleSequitur.Model
 
         public Digram(LinkedListNode<Symbol> ls)
         {
-            first = ls.Value;
-            second = ls.Next.Value;
+            Debug.Assert(ls != null && ls.Next != null);
+            if(ls != null)
+                first = ls.Value;
+            if (ls.Next != null) 
+                second = ls.Next.Value;
         }
 
         public bool Equals(Digram other)
@@ -37,20 +40,31 @@ namespace SimpleSequitur.Model
 
         public override String ToString()
         {
-            return first.ToString() + "," + second.ToString();
+            var r = "";
+            if (first != null)
+                r += first.ToString();
+            if(second != null)
+                r += "," + second.ToString();
+            return "("+r+")";
         }
     }
+
+    public enum OverlapInfo { Overlaps, NotFound, Found };
 
     public class DigramContainer
     {
         Dictionary<Digram, DigramEntry> _FirstOccurances;
         public Dictionary<Digram, DigramEntry> FirstOccurances { get { return _FirstOccurances; } }
 
+        Dictionary<LinkedList<Symbol>, DigramEntry> _RuleAnchors;
+        public Dictionary<LinkedList<Symbol>, DigramEntry> RuleAnchors { get { return _RuleAnchors; } }
+
         int _NextId;
         public DigramContainer()
         {
             _NextId = 0;
             _FirstOccurances = new Dictionary<Digram, DigramEntry>();
+            _RuleAnchors = new Dictionary<LinkedList<Symbol>, DigramEntry>();
         }
 
         /*Tuple<Symbol, Symbol> Digram(LinkedListNode<Symbol> ls)
@@ -67,15 +81,18 @@ namespace SimpleSequitur.Model
             } 
         }
 
-        internal bool NonOverlappingOccurenceFound(LinkedListNode<Symbol> linkedListNode)
+        
+
+        internal OverlapInfo NonOverlappingOccurenceFound(LinkedListNode<Symbol> linkedListNode)
         {
             var digram = new Digram(linkedListNode);
             if(!FirstOccurances.ContainsKey(digram))
-                return false;
+                return OverlapInfo.NotFound;
 
             var foundEntry = FirstOccurances[digram];
 
-            return !foundEntry.Overlaps(linkedListNode);
+
+            return foundEntry.Overlaps(linkedListNode) ? OverlapInfo.Overlaps : OverlapInfo.Found;
         }
 
 
@@ -104,12 +121,33 @@ namespace SimpleSequitur.Model
                 todo.RemovedDigrams.Add(new Digram(next));
 
             foundEntry.Rule = rule;
+            RuleAnchors[rule.Symbols] = foundEntry;
 
 
-            todo.DigramsToCheck.Add(foundEntry.StartPoint.Previous);
-            todo.DigramsToCheck.Add(foundEntry.StartPoint);
+
+            //if (!refreshOccurances(foundEntry))
+            {
+                todo.DigramsToCheck.Add(foundEntry.StartPoint.Previous);
+                todo.DigramsToCheck.Add(foundEntry.StartPoint);
+            }
 
             return todo;
+        }
+
+        private bool refreshOccurances(DigramEntry foundEntry)
+        {
+            //if found entry in rule that should be in the FirstOccurances dictinary -> put it there
+            if (foundEntry.StartPoint.List.First.Next == foundEntry.StartPoint.List.Last)
+            {
+                if (RuleAnchors.ContainsKey(foundEntry.StartPoint.List))
+                {
+                    var ancestorEntry = RuleAnchors[foundEntry.StartPoint.List];
+                    Debug.Print("refresh ancestor entry" + ancestorEntry.ToString() );
+                    FirstOccurances[new Digram(foundEntry.StartPoint.List.First)] = ancestorEntry;
+                    return true;
+                }
+            }
+            return false;
         }
 
         internal RecursionPoint setRule(LinkedListNode<Symbol> linkedListNode, Rule rule)
@@ -130,9 +168,11 @@ namespace SimpleSequitur.Model
 
             adigram.Rule = rule;
 
-            todo.DigramsToCheck.Add(adigram.StartPoint.Previous);
-            todo.DigramsToCheck.Add(adigram.StartPoint);
-
+            //if (!refreshOccurances(adigram))
+            {
+                todo.DigramsToCheck.Add(adigram.StartPoint.Previous);
+                todo.DigramsToCheck.Add(adigram.StartPoint);
+            }
 
             var symbolpntr = rule.Symbols.First;
 
@@ -143,35 +183,40 @@ namespace SimpleSequitur.Model
                 {
                     Rule pointedRule = (symbol as RuleInstance).Content; 
                     pointedRule.deuse();
-                    /*
-                     * TODO: make digrams to point optionaly more than to 2 symbols :) 
-                     * if (pointedRule.Count <= 1)
+                    
+                    if (pointedRule.Count <= 1)
                     {
+                        Debug.Assert(pointedRule.ID != rule.ID);
                         Debug.Print("substituting a rule:" + pointedRule.ID);
                         Debug.Print("into a rule:" + rule.ID);
 
-                        //todo.DigramsToCheck.Add(symbolpntr.Previous);
+                        todo.DigramsToCheck.Add(symbolpntr.Previous);
 
-                        var digram = new Digram(pointedRule.Symbols.First);
-                        if (FirstOccurances.ContainsKey(digram))
-                            FirstOccurances.Remove(digram);
+                        //
+                        //var digram = new Digram(pointedRule.Symbols.First);
+                        //if (FirstOccurances.ContainsKey(digram))
+                        //    FirstOccurances.Remove(digram);
 
 
                         var movedsymbol = pointedRule.Symbols.First;
                         while(movedsymbol != null)
                         {
                             var next = movedsymbol.Next;
-                            pointedRule.Symbols.Remove(movedsymbol);
-                            symbolpntr.List.AddBefore(symbolpntr, movedsymbol);
+                            //pointedRule.Symbols.Remove(movedsymbol);
+                            symbolpntr.List.AddBefore(symbolpntr, movedsymbol.Value);
                             movedsymbol = next;
                         }
                         symbolpntr = symbolpntr.Previous;
-                        //todo.DigramsToCheck.Add(symbolpntr);
+                        todo.DigramsToCheck.Add(symbolpntr);
                         rule.Symbols.Remove(symbolpntr.Next);
-                    } */                  
+                    }                   
                 }
                 symbolpntr = symbolpntr.Next;
             }
+
+
+
+
             return todo;
         }
 
@@ -182,8 +227,9 @@ namespace SimpleSequitur.Model
             {
                 if (!FirstOccurances.ContainsKey(digram))
                     continue;
-                Debug.Assert(!FirstOccurances[digram].IsRule);
-                FirstOccurances.Remove(digram);
+                //Debug.Assert(!FirstOccurances[digram].IsRule);
+                if(!FirstOccurances[digram].IsRule)
+                    FirstOccurances.Remove(digram);
             }
         }
 

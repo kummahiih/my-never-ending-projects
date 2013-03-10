@@ -38,49 +38,37 @@ namespace SimpleSequitur.Model
                 while (todo != null && !todo.Empty)
                 {
                     RecursionPoint newtodo = new RecursionPoint();
-                    HashSet<LinkedListNode<Symbol>> overlapped = new HashSet<LinkedListNode<Symbol>>();
+
 
                     foreach (var tocheck in todo.DigramsToCheck)
                     {
                         if (tocheck == null)
                             continue;
 
-                        if (overlapped.Contains(tocheck))
+                        OverlapInfo result = findOccurence(tocheck) ;
+                        if (result == OverlapInfo.Found)
                         {
-                            //not valid anymore.
-                            continue;
-                        }
-                        if (ShouldReplace(tocheck))
-                        {
-                            overlapped.Add(tocheck.Next);
-                            overlapped.Add(tocheck.Previous);
                             newtodo.UnionWith(replace(tocheck));
                         }
-                        else
+                        else if( result == OverlapInfo.NotFound)
                         {
                             noteDigram(tocheck);
                         }
+                        //otherwise overlaps
                     }
                     todo = newtodo;
+                    todo.UnionWith(_StartRule.CheckTail());
                 }
             }
         }
 
 
-        internal bool ShouldReplace(LinkedListNode<Symbol> linkedListNode)
+        internal OverlapInfo findOccurence(LinkedListNode<Symbol> linkedListNode)
         {
             if (linkedListNode == null || linkedListNode.Next == null)
-                return false;
+                return OverlapInfo.NotFound;
 
-            if (linkedListNode.List.First.Next == linkedListNode.List.Last)
-            {
-                Debug.Print("rejected replace:" + new Digram(linkedListNode).ToString() );
-                return false;
-            }
-
-            if (Data.NonOverlappingOccurenceFound(linkedListNode))
-                return true;
-            return false;
+            return Data.NonOverlappingOccurenceFound(linkedListNode);
         }
 
 
@@ -104,6 +92,7 @@ namespace SimpleSequitur.Model
 
             todo.UnionWith(Data.setRule(linkedListNode, rule));
             
+            
 
             Data.removeDigrams(todo.RemovedDigrams);
             todo.RemovedDigrams.Clear();
@@ -116,11 +105,8 @@ namespace SimpleSequitur.Model
         {
             if (linkedListNode == null || linkedListNode.Next == null)
                 return;
-            if (linkedListNode.List.First.Next == linkedListNode.List.Last)
-            {
-                Debug.Print("rejected Digram:" + new Digram(linkedListNode).ToString());
-                return;
-            }
+
+
             Data.noteDigram(linkedListNode);
         }
     }

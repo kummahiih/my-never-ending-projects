@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SimpleSequitur.ViewModel
 {
@@ -19,6 +20,7 @@ namespace SimpleSequitur.ViewModel
         public StringPackerViewModel()
         {
             _Input = "";
+            CreateTestCommand();
         }
         String _Input;
         public String Input
@@ -87,6 +89,27 @@ namespace SimpleSequitur.ViewModel
                 return entries;
             }
 
+        }
+
+        public ICommand TestCommand
+        {
+            get;
+            internal set;
+        }
+
+        private bool CanExecuteTestCommand()
+        {
+            return true;
+        }
+
+        private void CreateTestCommand()
+        {
+            TestCommand = new RelayCommand( param => TestExecute(), param => CanExecuteTestCommand());
+        }
+
+        public void TestExecute()
+        {
+           
         }
 
     }

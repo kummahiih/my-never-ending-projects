@@ -61,7 +61,13 @@ namespace SimpleSequitur.Model
             {
                 Debug.Assert(!IsRule);
                 _IsRule = true;
-                Debug.Print("setting rule:'" + value.ID + "':" + StartPoint.Value.Representation + "," + StartPoint.Next.Value.Representation);
+
+                var s = "setting rule:'" + value.ID + "':";
+                if (StartPoint != null)
+                    s += StartPoint.Value.Representation;
+                if (StartPoint.Next != null)
+                    s += "," + StartPoint.Next.Value.Representation;
+                Debug.Print(s);
                 if (value.Symbols.First == null)
                 {
                     value.Symbols.AddLast(StartPoint.Value);

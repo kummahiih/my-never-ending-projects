@@ -56,15 +56,18 @@ namespace SimpleSequitur
         {
 
             if( Symbols.First.Equals(Symbols.Last) )
-                return null;
-
-            if (!Algorithm.ShouldReplace(Symbols.Last.Previous))
+                return new RecursionPoint();
+            var result = Algorithm.findOccurence(Symbols.Last.Previous);
+            if ( result == OverlapInfo.NotFound )
             {
                 Algorithm.noteDigram(Symbols.Last.Previous);
-                return null;
+                return new RecursionPoint();
             }
-            
-            return Algorithm.replace(Symbols.Last.Previous);
+            else if( result == OverlapInfo.Found)
+            {            
+                return Algorithm.replace(Symbols.Last.Previous);
+            }
+            return new RecursionPoint();
         }
     }
 }
