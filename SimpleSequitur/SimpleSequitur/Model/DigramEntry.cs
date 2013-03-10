@@ -49,6 +49,14 @@ namespace SimpleSequitur.Model
             return new Digram(StartPoint).ToString();
         }
 
+        public void swapRule(Rule newRule)
+        {
+            Debug.Assert(IsRule);
+            RuleInstance old = StartPoint.Value as RuleInstance;
+            StartPoint.Value  = new RuleInstance(newRule);
+            old.Content.deuse();
+        }
+
         public Rule Rule
         {
             get
@@ -62,16 +70,19 @@ namespace SimpleSequitur.Model
                 Debug.Assert(!IsRule);
                 _IsRule = true;
 
+#if DEBUG
                 var s = "setting rule:'" + value.ID + "':";
                 if (StartPoint != null)
                     s += StartPoint.Value.Representation;
                 if (StartPoint.Next != null)
                     s += "," + StartPoint.Next.Value.Representation;
                 Debug.Print(s);
+#endif
                 if (value.Symbols.First == null)
                 {
                     value.Symbols.AddLast(StartPoint.Value);
-                    value.Symbols.AddLast(StartPoint.Next.Value);
+                    if(StartPoint.Next != null)
+                        value.Symbols.AddLast(StartPoint.Next.Value);
                 }
                 StartPoint.Value = new RuleInstance(value);
                 StartPoint.List.Remove(StartPoint.Next);

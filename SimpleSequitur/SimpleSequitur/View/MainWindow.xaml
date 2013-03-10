@@ -10,11 +10,12 @@
         <View:SymbolView  DataContext="{Binding Symbols, Mode=OneWay}" Width="300" Margin="0,0,0,10"/>
         </DockPanel>
         <DockPanel DockPanel.Dock="Left" Height="Auto" VerticalAlignment="Stretch">
-            <Button Content="Random test" DockPanel.Dock="Bottom"  HorizontalAlignment="Center"  Width="166"  Command="{Binding Autotest}" />
-            <Button Content="Generate Grammar From input" DockPanel.Dock="Bottom"  HorizontalAlignment="Center"  Width="175"/>            
+            <Button Content="Random test" DockPanel.Dock="Bottom"  HorizontalAlignment="Center"  Width="166"  Command="{Binding TestCommand}" />
+            <!-- just steal focus ^^ -->
+            <Button Content="Generate Grammar From input" DockPanel.Dock="Bottom"  HorizontalAlignment="Center" Width="175"/>            
 
             <Label DockPanel.Dock="Top" >Input text:</Label>
-            <TextBox DockPanel.Dock="Top" TextWrapping="Wrap" Text="{Binding Input, Mode=TwoWay}" Margin="0,0,0,0" Width="344" >
+            <TextBox DockPanel.Dock="Top" TextWrapping="Wrap" Text="{Binding Input, Mode=TwoWay}" Margin="0,0,0,0" Width="Auto" >
                 <TextBox.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>

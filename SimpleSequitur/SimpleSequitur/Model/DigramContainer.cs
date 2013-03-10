@@ -21,7 +21,7 @@ namespace SimpleSequitur.Model
 
         public Digram(LinkedListNode<Symbol> ls)
         {
-            Debug.Assert(ls != null && ls.Next != null);
+            Debug.Assert(ls != null /*&& ls.Next != null*/);
             if(ls != null)
                 first = ls.Value;
             if (ls.Next != null) 
@@ -35,6 +35,8 @@ namespace SimpleSequitur.Model
 
         public override int GetHashCode()
         {
+            if (second == null)
+                return first.GetHashCode();
             return first.GetHashCode() ^ second.GetHashCode();
         }
 
@@ -91,6 +93,8 @@ namespace SimpleSequitur.Model
 
             var foundEntry = FirstOccurances[digram];
 
+            if (this.RuleAnchors.ContainsKey(linkedListNode.List) && this.RuleAnchors[linkedListNode.List].Rule == foundEntry.Rule)
+                return OverlapInfo.Overlaps;
 
             return foundEntry.Overlaps(linkedListNode) ? OverlapInfo.Overlaps : OverlapInfo.Found;
         }
@@ -107,8 +111,8 @@ namespace SimpleSequitur.Model
         {
             RecursionPoint todo = new RecursionPoint();
 
-            var digram = new Digram(linkedListNode);
-            var foundEntry = FirstOccurances[digram];
+            var olddigram = new Digram(linkedListNode);
+            var foundEntry = FirstOccurances[olddigram];
 
             var currentEntry = new DigramEntry(linkedListNode);
 
@@ -123,56 +127,47 @@ namespace SimpleSequitur.Model
             foundEntry.Rule = rule;
             RuleAnchors[rule.Symbols] = foundEntry;
 
-
-
-            //if (!refreshOccurances(foundEntry))
-            {
-                todo.DigramsToCheck.Add(foundEntry.StartPoint.Previous);
-                todo.DigramsToCheck.Add(foundEntry.StartPoint);
-            }
+            refreshOccurances(foundEntry, todo, olddigram);
 
             return todo;
         }
 
-        private bool refreshOccurances(DigramEntry foundEntry)
+        private void refreshOccurances(DigramEntry foundEntry, RecursionPoint todo, Digram olddigram)
         {
-            //if found entry in rule that should be in the FirstOccurances dictinary -> put it there
-            if (foundEntry.StartPoint.List.First.Next == foundEntry.StartPoint.List.Last)
+            //if found entry in rule that should be in the FirstOccurances dictinary
+            //we cant make rule loops though .. so the expand  should continue
+            if (foundEntry.StartPoint.List.First.Next == foundEntry.StartPoint.List.Last ||
+                foundEntry.StartPoint.List.First == foundEntry.StartPoint.List.Last)
             {
-                if (RuleAnchors.ContainsKey(foundEntry.StartPoint.List))
-                {
-                    var ancestorEntry = RuleAnchors[foundEntry.StartPoint.List];
-                    Debug.Print("refresh ancestor entry" + ancestorEntry.ToString() );
-                    FirstOccurances[new Digram(foundEntry.StartPoint.List.First)] = ancestorEntry;
-                    return true;
-                }
+                todo.RulesToSkip.Add(olddigram);
             }
-            return false;
+            else
+            {
+                todo.DigramsToCheck.Add(foundEntry.StartPoint.Previous);
+                todo.DigramsToCheck.Add(foundEntry.StartPoint);
+            }
         }
 
         internal RecursionPoint setRule(LinkedListNode<Symbol> linkedListNode, Rule rule)
         {
             RecursionPoint todo = new RecursionPoint();
 
-            var adigram = new DigramEntry(linkedListNode);
-            
+            var adigramEntry = new DigramEntry(linkedListNode);
+            var olddigram = new Digram(linkedListNode.List.First);
+
             {
-                var prev = adigram.StartPoint.Previous;
+                var prev = adigramEntry.StartPoint.Previous;
                 if (prev != null)
                     todo.RemovedDigrams.Add(new Digram(prev));
 
-                var next = adigram.StartPoint.Next;
+                var next = adigramEntry.StartPoint.Next;
                 if (next != null && next.Next != null)
                     todo.RemovedDigrams.Add(new Digram(next));
             }
 
-            adigram.Rule = rule;
+            adigramEntry.Rule = rule;
 
-            //if (!refreshOccurances(adigram))
-            {
-                todo.DigramsToCheck.Add(adigram.StartPoint.Previous);
-                todo.DigramsToCheck.Add(adigram.StartPoint);
-            }
+            
 
             var symbolpntr = rule.Symbols.First;
 
@@ -214,7 +209,7 @@ namespace SimpleSequitur.Model
                 symbolpntr = symbolpntr.Next;
             }
 
-
+            refreshOccurances(adigramEntry, todo, olddigram);
 
 
             return todo;

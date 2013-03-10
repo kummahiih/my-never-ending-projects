@@ -35,28 +35,58 @@ namespace SimpleSequitur.Model
                 Debug.Print("read:'" + item + "'");
                 _StartRule.Symbols.AddLast(new TerminalInstance(item));                
                 RecursionPoint todo = _StartRule.CheckTail();
-                while (todo != null && !todo.Empty)
+                while (todo != null && !todo.Empty )
                 {
-                    RecursionPoint newtodo = new RecursionPoint();
-
-
-                    foreach (var tocheck in todo.DigramsToCheck)
+                    while(todo.DigramsToCheck.Count > 1)
                     {
-                        if (tocheck == null)
-                            continue;
 
-                        OverlapInfo result = findOccurence(tocheck) ;
-                        if (result == OverlapInfo.Found)
+                        RecursionPoint newtodo = new RecursionPoint();
+
+                        foreach (var tocheck in todo.DigramsToCheck)
                         {
-                            newtodo.UnionWith(replace(tocheck));
+                            if (tocheck == null)
+                                continue;
+
+                            OverlapInfo result = findOccurence(tocheck) ;
+                            if (result == OverlapInfo.Found)
+                            {
+                                newtodo.UnionWith(replace(tocheck));
+                            }
+                            else if( result == OverlapInfo.NotFound)
+                            {
+                                noteDigram(tocheck);
+                            }
+                            //otherwise overlaps
                         }
-                        else if( result == OverlapInfo.NotFound)
-                        {
-                            noteDigram(tocheck);
-                        }
-                        //otherwise overlaps
+                        todo = newtodo;
                     }
-                    todo = newtodo;
+
+                    foreach (var toexpand in todo.RulesToSkip)
+                    {
+                        Debug.Assert(Data.FirstOccurances.ContainsKey(toexpand));
+                        if (Data.FirstOccurances.ContainsKey(toexpand))
+                        {
+                            var oldEntry = Data.FirstOccurances[toexpand];
+                            Digram newDigram = new Digram(oldEntry.StartPoint);
+                            Debug.Assert(Data.FirstOccurances.ContainsKey(newDigram));
+                            var newEntry = Data.FirstOccurances[newDigram];
+                            Data.FirstOccurances[toexpand] = newEntry;
+                            //now the old rule can not be applied again by using that entry
+                            //we could remove it here .. and thats what we do
+                            if (newEntry.Rule != null)
+                                oldEntry.swapRule(newEntry.Rule);
+                        }
+                        else
+                        {
+                            //it has not been added to the dictionary at all?!
+                        }
+                    }
+                    todo.RulesToSkip.Clear();
+
+                    //useless?
+                    Data.removeDigrams(todo.RemovedDigrams);
+                    todo.RemovedDigrams.Clear();
+                    
                     todo.UnionWith(_StartRule.CheckTail());
                 }
             }
