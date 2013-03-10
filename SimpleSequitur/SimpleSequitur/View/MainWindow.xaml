@@ -25,7 +25,7 @@
                     </TransformGroup>
                 </TextBox.RenderTransform>
             </TextBox>
-            <Label DockPanel.Dock="Top" >Digram entries</Label>
+            <Label DockPanel.Dock="Top" >Substitution rules at the end:</Label>
             <ListView ItemsSource="{Binding DigramEntries}" ></ListView>
         </DockPanel>
 
