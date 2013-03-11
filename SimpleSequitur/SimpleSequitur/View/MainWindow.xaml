@@ -6,8 +6,17 @@
     <DockPanel>
 
         <DockPanel DockPanel.Dock="Right" >
-        <Label DockPanel.Dock="Top" >Generated grammar:</Label>
-        <View:SymbolView  DataContext="{Binding Symbols, Mode=OneWay}" Width="300" Margin="0,0,0,10"/>
+            <GroupBox DockPanel.Dock="Bottom" Header="Selected symbol" Width="300">
+                <StackPanel>
+                    <View:SymbolInfo  DataContext="{Binding SelectedSymbolVM, Mode=OneWay}" ></View:SymbolInfo>
+                    <Label>Generated content</Label>
+                    <TextBox Text="{Binding SelectedSymbolVM.EvaluatedString,Mode=OneWay}" IsReadOnly="True"> </TextBox>
+                </StackPanel>
+            </GroupBox>
+            <Label DockPanel.Dock="Top" >Generated grammar:</Label>
+            
+            <View:SymbolView DockPanel.Dock="Top"   DataContext="{Binding ., Mode=OneWay}" Width="300" Margin="0,0,0,10" HorizontalContentAlignment="Stretch" />
+            
         </DockPanel>
         <DockPanel DockPanel.Dock="Left" Height="Auto" VerticalAlignment="Stretch">
 

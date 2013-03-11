@@ -54,6 +54,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="View\SymbolInfo.xaml.cs">
+      <DependentUpon>SymbolInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SymbolView.xaml.cs">
       <DependentUpon>SymbolView.xaml</DependentUpon>
     </Compile>
@@ -78,6 +81,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\SymbolInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SymbolView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

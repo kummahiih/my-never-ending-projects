@@ -22,6 +22,8 @@ namespace SimpleSequitur.ViewModel
             _Input = "";
             _SplitFromSpaces = false;
             CreateTestCommand();
+            _Sequitur = new Sequitur();
+            _SelectedSymbolVM = new SymbolViewModel(new TerminalInstance(""), null);
         }
         String _Input;
         public String Input
@@ -59,11 +61,28 @@ namespace SimpleSequitur.ViewModel
 
         Sequitur _Sequitur;
 
+        SymbolViewModel _SelectedSymbolVM;
+        public SymbolViewModel SelectedSymbolVM 
+        {
+            get
+            {
+                return _SelectedSymbolVM;
+            }
+            set
+            {
+                if (value != _SelectedSymbolVM)
+                {
+                    _SelectedSymbolVM = value;
+                    OnPropertyChanged("SelectedSymbolVM");
+                }
+            }
+        }
+
         public List<SymbolViewModel> Symbols
         {
             get
             {
-                List<SymbolViewModel> returned = new List<SymbolViewModel>();
+                var returned = new  List<SymbolViewModel>();
                 try
                 {
                     Sequitur test = new Sequitur();
@@ -82,19 +101,24 @@ namespace SimpleSequitur.ViewModel
                     }
                     test.Evaluate(strings);
 
-                    
-                    SymbolViewModel root = new SymbolViewModel( test.StartRule  );
+                    SelectedSymbolVM = new SymbolViewModel(null, null);
+                    returned.Add( new SymbolViewModel(test.StartRule, (SymbolViewModel s) => this.SelectedSymbolVM = s ));
+                    foreach (var r in test.Rules)
+                    {
+                        returned.Add(new SymbolViewModel(r, (SymbolViewModel s) => this.SelectedSymbolVM = s));
+                    }
+
                     _Sequitur = test;
 
-                    returned.Add(root);
+                    Debug.Print("tree set (UI)");
                     OnPropertyChanged("DigramEntries");
                 }
                 catch (Exception e)
                 {
                     Debug.Print(e.StackTrace);
                 }
-                return returned;
 
+                return returned;
             }
         }
 

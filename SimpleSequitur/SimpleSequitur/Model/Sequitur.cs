@@ -21,10 +21,14 @@ namespace SimpleSequitur.Model
         DigramContainer _Data;
         public DigramContainer Data { get { return _Data; } }
 
+        public HashSet<Rule> Rules { get; protected set; }
+
         public Sequitur()
         {
+            Rules = new HashSet<Rule>();
             _Data = new DigramContainer();
-            _StartRule = new Rule(_Data.NextId, this);
+            _StartRule = new Rule("startrule", this);
+            //Rules.Add(_StartRule);
             _StartRule.reuse();
         }
 
@@ -87,6 +91,8 @@ namespace SimpleSequitur.Model
             if (rule == null)
             {
                 rule = new Rule(Data.NextId, this);
+                Rules.Add(rule);
+
 
                 Debug.Print("New rule created:" + rule.ID);
 

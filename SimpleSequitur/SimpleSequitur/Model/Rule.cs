@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SimpleSequitur
 {
-    public class Rule
+    public class Rule : RuleSymbol
     {
         Sequitur _Algorithm;
         public Sequitur Algorithm { get { return _Algorithm; } }
@@ -68,6 +68,36 @@ namespace SimpleSequitur
                 return Algorithm.replace(Symbols.Last.Previous);
             }
             return new RecursionPoint();
+        }
+
+        public bool IsTerminal
+        {
+            get { return false; }
+        }
+
+        public Rule Content { get { return this; } }
+
+        public String Representation
+        {
+            get { return ID; }
+        }
+
+        public string EvaluatedString
+        {
+            get 
+            {
+                StringBuilder ss = new StringBuilder();
+                foreach (var s in Content.Symbols)
+                {
+                    ss.Append(s.EvaluatedString);
+                }
+                return ss.ToString();
+            }
+        }
+
+        public bool Equals(Symbol other)
+        {
+            return (other as Rule) == this;
         }
     }
 }

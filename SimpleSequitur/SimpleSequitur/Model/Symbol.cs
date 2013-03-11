@@ -15,6 +15,12 @@ namespace SimpleSequitur
     {
         bool IsTerminal { get; }
         String Representation { get; }
+        String EvaluatedString { get; }
+    }
+
+    public interface RuleSymbol : Symbol
+    {
+        Rule Content { get; }
     }
 
     public class TerminalInstance : Symbol, IEquatable<Symbol>
@@ -30,6 +36,15 @@ namespace SimpleSequitur
         public bool IsTerminal
         {
             get { return true; }
+        }
+
+
+        public String EvaluatedString
+        {
+            get
+            {
+                return Content;
+            }
         }
 
 
@@ -54,7 +69,7 @@ namespace SimpleSequitur
         }
     }
 
-    public class RuleInstance : Symbol, IEquatable<Symbol>
+    public class RuleInstance : RuleSymbol, IEquatable<Symbol>
     {
         Rule _Content;
         public Rule Content { get { return _Content; } }
@@ -73,6 +88,14 @@ namespace SimpleSequitur
         public bool IsTerminal
         {
             get { return false; }
+        }
+
+        public String EvaluatedString
+        {
+            get
+            {
+                return Content.EvaluatedString;
+            }
         }
 
         public string Representation

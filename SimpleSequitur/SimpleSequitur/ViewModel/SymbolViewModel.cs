@@ -13,43 +13,98 @@ namespace SimpleSequitur.ViewModel
 {
     public class SymbolViewModel: ViewModelBase
     {
+        public delegate void OnSymbolVMSelectedDelegate(SymbolViewModel s);
+        OnSymbolVMSelectedDelegate _OnSymbolVMSelected;
+
         Symbol Symbol { get; set; }
-        public SymbolViewModel(Symbol s)
+        public SymbolViewModel(Symbol s, OnSymbolVMSelectedDelegate onSymbolSelected)
         {
             Symbol = s;
+            _IsSelected = false;
+            _OnSymbolVMSelected = onSymbolSelected;
+            _Symbols = new List<SymbolViewModel>();
         }
 
         public String Name
         {
             get
             {
-                String name = Symbol.Representation; 
-                if (!Symbol.IsTerminal)
-                    name += " C:"+(Symbol as RuleInstance).Content.Count.ToString();
-                return name;
+                if (Symbol == null)
+                    return "";
+                return  Symbol.Representation;
             }
         }
-
+        List<SymbolViewModel> _Symbols;
         public List<SymbolViewModel> Symbols
         {
             get
             {
-                List<SymbolViewModel> returned = new List<SymbolViewModel>();
-                if (Symbol.IsTerminal)
-                    return returned;
+
+                if (Symbol == null || Symbol.IsTerminal)
+                    return _Symbols;
                 else
                 {
-                    foreach (Symbol s in (Symbol as RuleInstance).Content.Symbols)
+                    _Symbols.Clear();
+                    foreach (Symbol s in (Symbol as RuleSymbol).Content.Symbols)
                     {
-                        returned.Add(new SymbolViewModel(s));
+                        _Symbols.Add(new SymbolViewModel(s, _OnSymbolVMSelected));
                     }
-                    return returned;
+                    return _Symbols;
                 }
             }
         }
 
-        public bool IsSelected { get; set; }
+        public String SymbolsAsString
+        {
+            get
+            {
+                if (Symbol == null)
+                    return "";
+                if(Symbol.IsTerminal)
+                    return (Symbol as TerminalInstance).Content;
+
+                StringBuilder ss = new StringBuilder();
+                foreach (Symbol s in (Symbol as RuleSymbol).Content.Symbols)
+                {
+                    ss.AppendFormat(" {0},", s.Representation);
+                }
+                return ss.ToString().TrimEnd(',');
+            }
+        }
+
+        public String UseCount
+        {
+            get
+            {
+                if (Symbol == null)
+                    return "";
+                if (Symbol.IsTerminal)
+                    return "-";
+                return (Symbol as RuleSymbol).Content.Count.ToString();
+            }
+        }
+
+        bool _IsSelected;
+        public bool IsSelected
+        {
+            get { return _IsSelected; }
+            set
+            {
+                if (_IsSelected != value)
+                {
+                    _IsSelected = value;
+                    if (_OnSymbolVMSelected != null)
+                        _OnSymbolVMSelected(this);
+                    OnPropertyChanged("IsSelected");
+                }
+            }
+        }
         public bool IsExpanded { get; set; }
+
+        public String EvaluatedString { get {
+            if (Symbol == null)
+                return "";
+            return this.Symbol.EvaluatedString; } }
 
 
     }
