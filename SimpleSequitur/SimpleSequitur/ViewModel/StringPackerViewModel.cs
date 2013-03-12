@@ -21,7 +21,7 @@ namespace SimpleSequitur.ViewModel
         {
             _Input = "";
             _SplitFromSpaces = false;
-            CreateTestCommand();
+            CreateCommands();
             _Sequitur = new Sequitur();
             _SelectedSymbolVM = new SymbolViewModel(new TerminalInstance(""), null);
         }
@@ -138,6 +138,8 @@ namespace SimpleSequitur.ViewModel
 
         }
 
+
+
         public ICommand TestCommand
         {
             get;
@@ -149,9 +151,23 @@ namespace SimpleSequitur.ViewModel
             return true;
         }
 
-        private void CreateTestCommand()
+
+        public ICommand RulesCommand
+        {
+            get;
+            internal set;
+        }
+
+        private bool CanExecuteRulesCommand()
+        {
+            return true;
+        }
+
+
+        private void CreateCommands()
         {
             TestCommand = new RelayCommand( param => TestExecute(), param => CanExecuteTestCommand());
+            RulesCommand = new RelayCommand(param => GetRules(), param => CanExecuteRulesCommand());
         }
 
         public void TestExecute()
@@ -166,6 +182,14 @@ namespace SimpleSequitur.ViewModel
             builder.Append(ch); 
             }
             Input = builder.ToString();
+        }
+
+        public void GetRules()
+        {
+            List<Rule> r = _Sequitur.getRules();
+            Debug.Print(r.Count.ToString());
+
+            return;
         }
 
     }

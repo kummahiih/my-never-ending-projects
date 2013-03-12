@@ -25,7 +25,8 @@
             </TextBox>
             <DockPanel DockPanel.Dock="Top">
                 <!-- just steal focus ^^ -->
-                <Button Content="Random test" DockPanel.Dock="Right"     Command="{Binding TestCommand}" />
+                <Button Content="Rules" DockPanel.Dock="Right"     Command="{Binding RulesCommand}" />
+                <Button Content="Random test" DockPanel.Dock="Right"     Command="{Binding TestCommand}" />                
                 <Button Content="Generate" DockPanel.Dock="Right" />
                 <CheckBox IsChecked="{Binding SplitFromSpaces, Mode=TwoWay}">split from whitepsaces</CheckBox>
             </DockPanel>

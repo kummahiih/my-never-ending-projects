@@ -69,12 +69,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\DigramContainer.cs" />
-    <Compile Include="Model\DigramEntry.cs" />
-    <Compile Include="Model\RecursionPoint.cs" />
-    <Compile Include="Model\Rule.cs" />
-    <Compile Include="Model\Sequitur.cs" />
-    <Compile Include="Model\Symbol.cs" />
+    <Compile Include="Model\Sequitur\DigramContainer.cs" />
+    <Compile Include="Model\Sequitur\DigramEntry.cs" />
+    <Compile Include="Model\Sequitur\RecursionPoint.cs" />
+    <Compile Include="Model\Sequitur\Rule.cs" />
+    <Compile Include="Model\Sequitur\Sequitur.cs" />
+    <Compile Include="Model\Sequitur\Symbol.cs" />
     <Compile Include="ViewModel\StringPackerViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
