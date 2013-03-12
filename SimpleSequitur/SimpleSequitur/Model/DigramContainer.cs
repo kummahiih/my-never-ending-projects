@@ -203,13 +203,14 @@ namespace SimpleSequitur.Model
                         while(movedsymbol != null)
                         {
                             var next = movedsymbol.Next;
-                            //pointedRule.Symbols.Remove(movedsymbol);
+                            //pointedRule.Symbols.Remove(movedsymbol);                            
                             symbolpntr.List.AddBefore(symbolpntr, movedsymbol.Value);
+                            todo.DigramsToCheck.Add(symbolpntr.Previous);
                             movedsymbol = next;
                         }
                         symbolpntr = symbolpntr.Previous;
                         rule.Symbols.Remove(symbolpntr.Next);
-                        todo.DigramsToCheck.Add(symbolpntr);
+                        
                         
                     }                   
                 }
