@@ -4,7 +4,6 @@
 */
 
 
-using SimpleSequitur.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
+using SequiturAlg;
 
 namespace SimpleSequitur.ViewModel
 {
@@ -186,8 +187,13 @@ namespace SimpleSequitur.ViewModel
 
         public void GetRules()
         {
-            List<Rule> r = _Sequitur.getRules();
-            Debug.Print(r.Count.ToString());
+            HashSet<Rule> rl = _Sequitur.getRules();
+            Debug.Print("Rules:" + rl.Count.ToString());
+
+            int symbol_leght = 1;
+            rl.ToList().ForEach(r => symbol_leght += r.Symbols.Count);
+
+            Debug.Print("symbols:" + symbol_leght);
 
             return;
         }

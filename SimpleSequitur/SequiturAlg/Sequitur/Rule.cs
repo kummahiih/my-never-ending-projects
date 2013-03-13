@@ -3,7 +3,6 @@
 @license: MIT <http://www.opensource.org/licenses/mit-license.php>
 */
 
-using SimpleSequitur.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleSequitur
+namespace SequiturAlg
 {
     public class Rule : RuleSymbol
     {

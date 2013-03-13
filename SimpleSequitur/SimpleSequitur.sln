@@ -2,6 +2,16 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSequitur", "SimpleSequitur\SimpleSequitur.csproj", "{FC98D974-7670-4BFC-AEBD-9A2B1D6073B8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{128EB677-17DC-4630-BCD6-116ABE91A8C1} = {128EB677-17DC-4630-BCD6-116ABE91A8C1}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SequiturAlg", "SequiturAlg\SequiturAlg.csproj", "{128EB677-17DC-4630-BCD6-116ABE91A8C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComplexityAttractor", "ComplexityAttractor\ComplexityAttractor.csproj", "{6843A2E2-B7D9-4167-8B01-E10344D9FC1D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{128EB677-17DC-4630-BCD6-116ABE91A8C1} = {128EB677-17DC-4630-BCD6-116ABE91A8C1}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +23,14 @@ Global
 		{FC98D974-7670-4BFC-AEBD-9A2B1D6073B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC98D974-7670-4BFC-AEBD-9A2B1D6073B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC98D974-7670-4BFC-AEBD-9A2B1D6073B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{128EB677-17DC-4630-BCD6-116ABE91A8C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{128EB677-17DC-4630-BCD6-116ABE91A8C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{128EB677-17DC-4630-BCD6-116ABE91A8C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{128EB677-17DC-4630-BCD6-116ABE91A8C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6843A2E2-B7D9-4167-8B01-E10344D9FC1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6843A2E2-B7D9-4167-8B01-E10344D9FC1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6843A2E2-B7D9-4167-8B01-E10344D9FC1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6843A2E2-B7D9-4167-8B01-E10344D9FC1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

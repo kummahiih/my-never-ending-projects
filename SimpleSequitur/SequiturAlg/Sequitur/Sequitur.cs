@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleSequitur.Model
+namespace SequiturAlg
 {
     public class Sequitur
     {
@@ -73,14 +73,15 @@ namespace SimpleSequitur.Model
             }
         }
 
-        public List<Rule> getRules()
+        public HashSet<Rule> getRules()
         {
-            ConcurrentBag<Rule> returned = new ConcurrentBag<Rule>();
+            //no hashset...
+            ConcurrentDictionary<Rule, int> returned = new ConcurrentDictionary<Rule, int>();
 
             //ConcurrentBag<Action> tasks = new ConcurrentBag<Action>();
 
             //just studying how to use tasks
-            returned.Add(StartRule.Content);
+            returned[StartRule.Content] = 1;
 
             Action<Rule> rules = null;
             rules = (Rule r) =>
@@ -92,7 +93,7 @@ namespace SimpleSequitur.Model
                              {
                                  tasks.Add( Task.Factory.StartNew(() =>
                                      {
-                                         returned.Add((r2 as RuleInstance).Content);
+                                         returned.AddOrUpdate((r2 as RuleInstance).Content,0, (Rule r3, int cnt) => cnt+1);
                                          rules((r2 as RuleInstance).Content);
                                      }));
                              }
@@ -102,7 +103,7 @@ namespace SimpleSequitur.Model
                  };
             rules(StartRule.Content);
 
-            return returned.ToList();
+            return new HashSet<Rule>(returned.Keys);
         }
 
         internal OverlapInfo findOccurence(LinkedListNode<Symbol> linkedListNode)

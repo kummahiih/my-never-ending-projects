@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SequiturAlg;
+
 namespace SimpleSequitur.ViewModel
 {
     public class SymbolViewModel: ViewModelBase
