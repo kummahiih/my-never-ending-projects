@@ -42,7 +42,7 @@ namespace ComplexityAttractor.Model
             {
                 int bestCompl = complexity(S);
                 String best = S;
-                foreach (var m in Mutations())
+                foreach (var m in MutationsSwap())
                 {
                     var c = complexity(m);
                     if (c >= bestCompl)
@@ -54,7 +54,7 @@ namespace ComplexityAttractor.Model
             }
         }
 
-        IEnumerable<String> Mutations()
+        IEnumerable<String> MutationsChar()
         {
             for (int i = 0; i < S.Length; i++)
             {
@@ -64,5 +64,22 @@ namespace ComplexityAttractor.Model
                 }
             }
         }
+
+        IEnumerable<String> MutationsSwap()
+        {
+            for (int i = 0; i < S.Length-1; i++)
+            {
+                for (int j = i+1; j < S.Length; j++)
+                {
+
+                    var s2 = S.Substring(0, i) + S[j].ToString() + S.Substring(i + 1, j -i -1) + S[i].ToString() + S.Substring(j);
+
+                    yield return s2;
+                }
+                
+            }
+        }
+
+
     }
 }
