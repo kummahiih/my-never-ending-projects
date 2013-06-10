@@ -1,5 +1,9 @@
 # -*- coding: cp1252 -*-
 
+"""
+@copyright: 2013 by Pauli Rikula <pauli.rikula@gmail.com>
+@license: MIT <http://www.opensource.org/licenses/mit-license.php>
+"""
 from kuvio import *
 from kuviot_perkkio import Kuviot
 from plot_tools import makeplot_from_lists, yearly
