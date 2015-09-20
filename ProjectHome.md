@@ -1,0 +1,1 @@
+Code dump for  various hobby and self learning projects. Quality will vary quite much. If you really want to use something, please ask if I remember what I did not do.
